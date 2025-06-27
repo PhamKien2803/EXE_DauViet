@@ -44,9 +44,9 @@ function SignInForm() {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-         const userInfo = await responseMe.json();
-  
-          const { role } = userInfo;
+        const userInfo = await responseMe.json();
+
+        const { role } = userInfo;
         login(userInfo);
         if (role === "admin") {
           navigate("admin/dashboard");
@@ -86,15 +86,15 @@ function SignInForm() {
       <form onSubmit={handleOnSubmit}>
         <h1 style={{ fontSize: 32 }}>Sign in</h1>
         <div className="social-container">
-          <a href="#" className="social">
+          <button type="button" className="social" aria-label="Sign in with Facebook">
             <FaFacebookF />
-          </a>
-          <a href="#" className="social">
+          </button>
+          <button type="button" className="social" aria-label="Sign in with Google Plus">
             <FaGooglePlusG />
-          </a>
-          <a href="#" className="social">
+          </button>
+          <button type="button" className="social" aria-label="Sign in with Instagram">
             <FaInstagram />
-          </a>
+          </button>
         </div>
         <span>or use your account</span>
         <input
@@ -111,7 +111,21 @@ function SignInForm() {
           value={state.password}
           onChange={handleChange}
         />
-        <a href="#">Forgot your password?</a>
+        <button
+          type="button"
+          style={{
+            background: "none",
+            border: "none",
+            color: "#007bff",
+            textDecoration: "underline",
+            cursor: "pointer",
+            padding: 0,
+            font: "inherit"
+          }}
+          onClick={() => alert("Forgot password functionality not implemented yet.")}
+        >
+          Forgot your password?
+        </button>
         <button type="submit" style={buttonStyle}>
           Sign In
         </button>
