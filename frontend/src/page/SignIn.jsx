@@ -1,0 +1,130 @@
+import React, { useState } from "react";
+import { FaFacebookF, FaGooglePlusG, FaInstagram } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/UserContext";
+
+function SignInForm() {
+  const [state, setState] = useState({ email: "", password: "" });
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
+  const { login } = useUser();
+
+  const handleChange = (evt) => {
+    const value = evt.target.value;
+    setState({
+      ...state,
+      [evt.target.name]: value,
+    });
+  };
+
+  const handleOnSubmit = async (evt) => {
+    evt.preventDefault();
+    setErrorMessage(""); // clear lỗi cũ
+
+    const { email, password } = state;
+
+    try {
+      const response = await fetch("http://localhost:9999/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username: email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        const { accessToken } = data;
+        localStorage.setItem("accessToken", accessToken);
+        const responseMe = await fetch("http://localhost:9999/api/auth/me", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+         const userInfo = await responseMe.json();
+  
+          const { role } = userInfo;
+        login(userInfo);
+        if (role === "admin") {
+          navigate("admin/dashboard");
+          console.log("Tài khoản admin");
+        } else if (role === "customer") {
+          localStorage.setItem("user", JSON.stringify(userInfo));
+          navigate("/");
+        } else {
+          setErrorMessage("Không xác định được vai trò người dùng.");
+        }
+      } else {
+        setErrorMessage("Sai thông tin đăng nhập hoặc mật khẩu.");
+      }
+    } catch (error) {
+      setErrorMessage("Không thể kết nối đến máy chủ: " + error.message);
+    }
+
+    setState({ email: "", password: "" });
+  };
+
+  const buttonStyle = {
+    borderRadius: "20px",
+    border: "1px solid #ff4b2b",
+    backgroundColor: "#ff4b2b",
+    color: "#ffffff",
+    fontSize: "12px",
+    fontWeight: "bold",
+    padding: "12px 45px",
+    letterSpacing: "1px",
+    textTransform: "uppercase",
+    transition: "transform 80ms ease-in",
+    outline: "none",
+  };
+
+  return (
+    <div className="form-container sign-in-container">
+      <form onSubmit={handleOnSubmit}>
+        <h1 style={{ fontSize: 32 }}>Sign in</h1>
+        <div className="social-container">
+          <a href="#" className="social">
+            <FaFacebookF />
+          </a>
+          <a href="#" className="social">
+            <FaGooglePlusG />
+          </a>
+          <a href="#" className="social">
+            <FaInstagram />
+          </a>
+        </div>
+        <span>or use your account</span>
+        <input
+          type="text"
+          placeholder="Username"
+          name="email"
+          value={state.email}
+          onChange={handleChange}
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={state.password}
+          onChange={handleChange}
+        />
+        <a href="#">Forgot your password?</a>
+        <button type="submit" style={buttonStyle}>
+          Sign In
+        </button>
+
+        {/* Hiển thị lỗi đăng nhập */}
+        {errorMessage && (
+          <p style={{ color: "red", marginTop: "12px", fontSize: "14px" }}>
+            {errorMessage}
+          </p>
+        )}
+      </form>
+    </div>
+  );
+}
+
+export default SignInForm;

@@ -1,0 +1,16 @@
+1. Sử dụng redis 
+
+B1: Cài redis: https://github.com/tporadowski/redis/releases
+
+B2: Giải nén về thư mục đường dẫn là: C:\Redis
+
+B3: Trỏ tới thư mục và chạy khởi động: .\redis-server.exe
+
+B4: Ping thử đã kết nối đến Redis: cd C:\Redis
+                                   .\redis-cli.exe ping
+
+B5: Hiện Pong là oke 
+
+PS C:\Redis> .\redis-cli.exe
+127.0.0.1:6379> keys *
+
