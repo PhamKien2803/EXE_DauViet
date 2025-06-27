@@ -3,7 +3,10 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-
+// import axios from "axios";
+// axios.defaults.baseURL = "http://localhost:9999/api";
+// axios.defaults.baseURL = "http://localhost:7071/api/";
+// axios.defaults.baseURL = "https://azure-dau-viet-function-bucwa3f7b2fjbnbh.eastus-01.azurewebsites.net/api/";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
