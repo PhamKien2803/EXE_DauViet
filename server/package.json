@@ -4,12 +4,14 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "func start",
     "start": "nodemon src/server.js"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@azure/functions": "^4.7.0",
     "back-end": "file:",
     "bcryptjs": "^3.0.2",
     "cloudinary": "^1.41.3",
@@ -31,6 +33,7 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
+    "azure-functions-core-tools": "^4.0.7030",
     "morgan": "^1.10.0",
     "nodemon": "^3.1.9"
   }
