@@ -1,7 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { CiSearch } from "react-icons/ci";
-import { FaUserCircle } from "react-icons/fa";
 import { FaClipboardList } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSearch } from "../../context/SearchContext";
@@ -19,7 +18,6 @@ function Header() {
   const { logout } = useUser();
 
   const [showCartPreview, setShowCartPreview] = useState(false);
-  const [showUserMenu, setShowUserMenu] = useState(false);
 
   const user = getUserInfo();
   const loggedIn = isAuthenticated();

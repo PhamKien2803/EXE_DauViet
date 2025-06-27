@@ -1,12 +1,11 @@
 import Header from "../homepage/Header";
-import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
 function ProductHistory() {
   const navigate = useNavigate();
-  const [selectedPeriod, setSelectedPeriod] = useState(0);
+
 
   const historicalPeriods = [
     {
@@ -75,8 +74,7 @@ function ProductHistory() {
     },
   ];
 
-  const currentPeriod = historicalPeriods[selectedPeriod];
-  const maxToShow = 3;
+
 
   const getGridCols = (length) => {
     if (length === 1) return "grid-cols-1";
@@ -100,6 +98,7 @@ function ProductHistory() {
                 <img
                   src="https://hoangthanhthanglong.vn/wp-content/uploads/2023/05/hoangthanh.jpg"
                   className="object-cover w-32 h-32 border-4 border-white rounded-full shadow-lg"
+                  alt="Hoàng Thành Thăng Long"
                 />
               </div>
 
@@ -250,6 +249,7 @@ function ProductHistory() {
                       <img
                         src="https://hoangthanhthanglong.vn/wp-content/uploads/2023/05/hoangthanh.jpg"
                         className="object-cover border-4 border-white rounded-full shadow-lg w-14 h-14"
+                        alt="Hoàng Thành Thăng Long"
                       />
                       <div className="flex-1">
                         <h4 className="mt-4 font-bold text-gray-800">

@@ -7,6 +7,8 @@ function CartPage() {
   const { cartItems, updateItemQuantity, removeItem } = useCart();
   const [selectedItems, setSelectedItems] = useState(cartItems.map(item => item._id));
   const [voucher, setVoucher] = useState("");
+  console.log(setVoucher);
+
   const [showOrderForm, setShowOrderForm] = useState(false);
   const [formData, setFormData] = useState({ address: "", phone: "", note: "" });
   const navigate = useNavigate();

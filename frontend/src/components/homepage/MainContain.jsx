@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import React from "react";
 import { useSearch } from "../../context/SearchContext";
-import { ShoppingCart } from 'lucide-react'; 
+import { ShoppingCart } from 'lucide-react';
 import { useCart } from "../../context/CartContext";
 
 function MainContent() {
@@ -78,7 +78,7 @@ function MainContent() {
     if (searchQuery && filteredProducts.length > 0) {
       scrollToProduct(filteredProducts[0].id);
     }
-  }, [searchQuery]);
+  }, [searchQuery, filteredProducts]);
 
   if (loading) {
     return (

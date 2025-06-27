@@ -24,7 +24,7 @@ function OrderListPage() {
     } catch (err) {
       navigate("/login");
     }
-  }, []);
+  }, [navigate, token]);
 
   // Gọi API lấy đơn hàng
   useEffect(() => {

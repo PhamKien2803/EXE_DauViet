@@ -11,12 +11,6 @@ import OrderListPage from "./page/OrderListPage";
 import { UserProvider } from "./context/UserContext";
 import Quiz from "./components/quiz/Quiz";
 
-// Import admin components
-import AdminLayout from "./components/admin/AdminLayout";
-import DashBoard from "./components/admin/DashBoard";
-import Products from "./components/admin/Product";
-import Quizzes from "./components/admin/Quizzes";
-import Orders from "./components/admin/Order";
 
 function App() {
   return (

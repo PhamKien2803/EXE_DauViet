@@ -17,7 +17,7 @@ function SignUpForm() {
     });
   };
 
-const handleOnSubmit = async (evt) => {
+  const handleOnSubmit = async (evt) => {
     evt.preventDefault();
 
     const { name, email, password } = state;
@@ -65,18 +65,18 @@ const handleOnSubmit = async (evt) => {
       <form onSubmit={handleOnSubmit}>
         <h1 style={{ fontSize: 32 }}>Create Account</h1>
         <div className="social-container">
-          <a href="#" className="social">
+          <button type="button" className="social" aria-label="Sign up with Facebook" style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}>
             {/* <i className="fab fa-facebook-f" /> */}
             <FaFacebookF className="fab fa-facebook-f" />
-          </a>
-          <a href="#" className="social">
+          </button>
+          <button type="button" className="social" aria-label="Sign up with Google" style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}>
             {/* <i className="fab fa-google-plus-g" /> */}
             <FaGooglePlusG />
-          </a>
-          <a href="#" className="social">
+          </button>
+          <button type="button" className="social" aria-label="Sign up with Instagram" style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}>
             {/* <i className="fab fa-linkedin-in" /> */}
             <FaInstagram />
-          </a>
+          </button>
         </div>
         <span>or use your email for registration</span>
         <input

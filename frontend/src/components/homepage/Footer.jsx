@@ -31,11 +31,6 @@ function Footer() {
     { icon: FaLinkedin, href: '#' },
   ];
 
-  const openingHours = [
-    { day: 'Monday - Saturday', time: '09AM - 09PM' },
-    { day: 'Sunday', time: '10AM - 08PM' },
-  ];
-
   const bottomLinks = [
     { label: 'Home', href: '#' },
     { label: 'Cookies', href: '#' },
@@ -99,13 +94,13 @@ function Footer() {
             </ul>
           </div>
 
-       
+
         </div>
 
         {/* Bottom bar */}
         <div className="flex flex-col items-center justify-between pt-6 mt-10 text-sm border-t border-gray-700 md:flex-row">
           <div className="mb-2 md:mb-0">
-            &copy; <a href="#" className="text-yellow-400 underline">Your Site Name</a>, All Right Reserved.
+            &copy; <a href="https://yoursitename.com" className="text-yellow-400 underline">Your Site Name</a>, All Right Reserved.
           </div>
           <div className="flex space-x-6">
             {bottomLinks.map((link, idx) => (

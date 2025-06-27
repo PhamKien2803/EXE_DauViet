@@ -1,4 +1,3 @@
-import React from "react";
 
 const orders = [
   {
@@ -37,11 +36,6 @@ const columns = [
   { label: "TG Giao hàng", key: "end", width: "w-40" },
 ];
 
-const statusColor = (status) => {
-  if (status === "Đã giao") return "bg-green-100 text-green-700";
-  if (status === "Đang xử lý") return "bg-yellow-100 text-yellow-700";
-  return "bg-gray-100 text-gray-700";
-};
 
 const Orders = () => (
   <div className="bg-gradient-to-br from-yellow-50 via-orange-50 to-white rounded-xl shadow-xl p-8">

@@ -1,11 +1,8 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
-import { CiSearch } from "react-icons/ci";
 
 function Slider() {
   return (
     <div className="min-h-screen font-sans ">
-      
+
       {/* Slider */}
       <div className="pt-5 relative w-[90%] mx-auto mt-6 rounded overflow-hidden shadow-lg">
         <img
@@ -27,7 +24,7 @@ function Slider() {
         </div>
       </div>
 
-      
+
     </div>
   );
 }
