@@ -165,13 +165,13 @@ function CartPage() {
             />
             <label htmlFor="agree-term" className="text-sm text-gray-700">
               Tôi đã đọc và đồng ý với{" "}
-              <a href="#" className="text-[#e94f4a] underline">
+              <span className="text-[#e94f4a] underline cursor-pointer">
                 điều khoản
-              </a>{" "}
+              </span>{" "}
               và{" "}
-              <a href="#" className="text-[#e94f4a] underline">
+              <span className="text-[#e94f4a] underline cursor-pointer">
                 điều kiện thanh toán
-              </a>
+              </span>
             </label>
           </div>
           <button

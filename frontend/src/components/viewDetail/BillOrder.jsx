@@ -22,7 +22,7 @@ function BillOrder() {
       console.error("Lỗi parse user:", err);
       navigate("/login");
     }
-  }, []); // Chỉ chạy 1 lần khi component mount
+  }, [navigate, token]); // Chỉ chạy 1 lần khi component mount
 
   // Gọi API lấy đơn hàng mới nhất
   useEffect(() => {

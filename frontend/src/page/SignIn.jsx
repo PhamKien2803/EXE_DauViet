@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import { GoogleLogin } from "@react-oauth/google";
+import { Link } from "react-router-dom";
 
 function SignInForm() {
   const [state, setState] = useState({ email: "", password: "" });
@@ -154,8 +155,9 @@ function SignInForm() {
           value={state.password}
           onChange={handleChange}
         />
-        <a href="#">Forgot your password?</a>
-
+        <Link to="/forgot-password" className="text-blue-500 hover:underline">
+          Forgot your password?
+        </Link>
         <GoogleLogin onSuccess={handleSuccess} onError={handleError} />
 
         <button type="submit" style={buttonStyle}>
