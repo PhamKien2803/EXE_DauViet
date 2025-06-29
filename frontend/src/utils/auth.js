@@ -9,3 +9,7 @@ export const getUserInfo = () => {
     return null;
   }
 };
+
+export const getToken = () => {
+  return localStorage.getItem("accessToken");
+};

@@ -6,7 +6,7 @@ const orderSchema = new mongoose.Schema({
         product: { type: mongoose.Types.ObjectId, ref: "Product", required: true },
         quantity: { type: Number, default: 1 } 
     }],
-    vouchers: { type: String }, 
+    vouchers: { type: [String], default: [] },
     state: {
         type: String,
         enum: ["Chưa thanh toán", "Đã thanh toán", "Hủy đơn hàng"],
