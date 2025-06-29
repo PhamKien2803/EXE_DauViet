@@ -1,13 +1,62 @@
 import React, { useState } from "react";
-import { FaFacebookF, FaGooglePlusG, FaInstagram } from "react-icons/fa";
+// import { FaFacebookF, FaGooglePlusG, FaInstagram } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
+import { GoogleLogin } from "@react-oauth/google";
+import { Link } from "react-router-dom";
 
 function SignInForm() {
   const [state, setState] = useState({ email: "", password: "" });
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
   const { login } = useUser();
+
+  const handleSuccess = async (credentialResponse) => {
+    try {
+      const { credential } = credentialResponse;
+
+      const response = await fetch(
+        "http://localhost:9999/api/auth/google-login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token: credential }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        const { accessToken } = data;
+        localStorage.setItem("accessToken", accessToken);
+
+        const responseMe = await fetch("http://localhost:9999/api/auth/me", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        const userInfo = await responseMe.json();
+        login(userInfo);
+
+        // Chuyển hướng về trang chủ (do không có admin)
+        localStorage.setItem("user", JSON.stringify(userInfo));
+        navigate("/");
+      } else {
+        setErrorMessage("Không thể đăng nhập bằng Google.");
+      }
+    } catch (error) {
+      setErrorMessage("Lỗi đăng nhập Google: " + error.message);
+    }
+  };
+
+  const handleError = () => {
+    setErrorMessage("Đăng nhập Google thất bại. Vui lòng thử lại.");
+  };
 
   const handleChange = (evt) => {
     const value = evt.target.value;
@@ -44,19 +93,13 @@ function SignInForm() {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-        const userInfo = await responseMe.json();
 
-        const { role } = userInfo;
+        const userInfo = await responseMe.json();
         login(userInfo);
-        if (role === "admin") {
-          navigate("admin/dashboard");
-          console.log("Tài khoản admin");
-        } else if (role === "customer") {
-          localStorage.setItem("user", JSON.stringify(userInfo));
-          navigate("/");
-        } else {
-          setErrorMessage("Không xác định được vai trò người dùng.");
-        }
+
+        // Chuyển hướng về trang chủ (do không có admin)
+        localStorage.setItem("user", JSON.stringify(userInfo));
+        navigate("/");
       } else {
         setErrorMessage("Sai thông tin đăng nhập hoặc mật khẩu.");
       }
@@ -79,24 +122,25 @@ function SignInForm() {
     textTransform: "uppercase",
     transition: "transform 80ms ease-in",
     outline: "none",
+    marginTop: "30px",
   };
 
   return (
     <div className="form-container sign-in-container">
       <form onSubmit={handleOnSubmit}>
-        <h1 style={{ fontSize: 32 }}>Sign in</h1>
-        <div className="social-container">
-          <button type="button" className="social" aria-label="Sign in with Facebook">
+        <h1 style={{ fontSize: 32, paddingBottom: 20 }}>Sign in</h1>
+        {/* <div className="social-container">
+          <a href="#" className="social">
             <FaFacebookF />
-          </button>
-          <button type="button" className="social" aria-label="Sign in with Google Plus">
+          </a>
+          <a href="#" className="social">
             <FaGooglePlusG />
-          </button>
-          <button type="button" className="social" aria-label="Sign in with Instagram">
+          </a>
+          <a href="#" className="social">
             <FaInstagram />
-          </button>
-        </div>
-        <span>or use your account</span>
+          </a>
+        </div> */}
+        {/* <span>or use your account</span> */}
         <input
           type="text"
           placeholder="Username"
@@ -111,26 +155,15 @@ function SignInForm() {
           value={state.password}
           onChange={handleChange}
         />
-        <button
-          type="button"
-          style={{
-            background: "none",
-            border: "none",
-            color: "#007bff",
-            textDecoration: "underline",
-            cursor: "pointer",
-            padding: 0,
-            font: "inherit"
-          }}
-          onClick={() => alert("Forgot password functionality not implemented yet.")}
-        >
+        <Link to="/forgot-password" className="text-blue-500 hover:underline">
           Forgot your password?
-        </button>
+        </Link>
+        <GoogleLogin onSuccess={handleSuccess} onError={handleError} />
+
         <button type="submit" style={buttonStyle}>
           Sign In
         </button>
 
-        {/* Hiển thị lỗi đăng nhập */}
         {errorMessage && (
           <p style={{ color: "red", marginTop: "12px", fontSize: "14px" }}>
             {errorMessage}
