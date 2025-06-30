@@ -86,7 +86,7 @@ function SignInForm() {
       if (response.ok) {
         const { accessToken } = data;
         localStorage.setItem("accessToken", accessToken);
-        const responseMe = await fetch("http://localhost:7071/api/auth/me", {
+        const responseMe = await fetch("https://azure-dau-viet-function-bucwa3f7b2fjbnbh.eastus-01.azurewebsites.net/api/auth/me", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
