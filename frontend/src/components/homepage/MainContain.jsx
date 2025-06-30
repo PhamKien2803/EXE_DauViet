@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import React from "react";
 import { useSearch } from "../../context/SearchContext";
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart } from "lucide-react";
 import { useCart } from "../../context/CartContext";
 
 function MainContent() {
@@ -13,22 +12,38 @@ function MainContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { addToCart } = useCart();
-  // Hàm format giá tiền
+
   const formatPrice = (price) =>
     price?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:9999/api/product");
+        // https://azure-dau-viet-function-bucwa3f7b2fjbnbh.eastus-01.azurewebsites.net/
+        const response = await fetch("https://azure-dau-viet-function-bucwa3f7b2fjbnbh.eastus-01.azurewebsites.net/api/product");
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }
-        const data = await response.json();
 
-        // Check if data is an array or has a data property
-        const productsData = Array.isArray(data) ? data : data.data || [];
+        if (response.status === 204) {
+          setProducts([]);
+          setLoading(false);
+          return;
+        }
 
+        let data = null;
+        try {
+          data = await response.json();
+        } catch (e) {
+          console.warn("Không có JSON hợp lệ từ server:", e);
+          setProducts([]);
+          setLoading(false);
+          return;
+        }
+
+        const productsData = Array.isArray(data)
+          ? data
+          : data?.products || [];
         setProducts(productsData);
         setLoading(false);
       } catch (err) {
@@ -61,7 +76,7 @@ function MainContent() {
   });
 
   const [startIndex, setStartIndex] = useState(0);
-  const productsPerPage = 8; // 2 hàng, 4 cột
+  const productsPerPage = 8;
   const endIndex = startIndex + productsPerPage;
   const currentProducts = filteredProducts.slice(startIndex, endIndex);
 
@@ -73,10 +88,9 @@ function MainContent() {
     }
   };
 
-  // Effect to scroll to first matching product when search changes
-  React.useEffect(() => {
+  useEffect(() => {
     if (searchQuery && filteredProducts.length > 0) {
-      scrollToProduct(filteredProducts[0].id);
+      scrollToProduct(filteredProducts[0]._id);
     }
   }, [searchQuery, filteredProducts]);
 
@@ -98,19 +112,16 @@ function MainContent() {
 
   return (
     <div>
-      {/* Flash Sales */}
       <section className="w-[90%] mx-auto mt-10">
         <div className="flex items-center mb-10">
           <div className="w-2 h-6 mr-2 bg-red-400 rounded"></div>
           <span className="text-xl font-semibold text-red-400">Sản Phẩm</span>
         </div>
-        {/* Hiển thị tổng số sản phẩm */}
         <div className="mb-4 text-base text-gray-600">
           Hiển thị {filteredProducts.length} sản phẩm
         </div>
-        {/* Flash Sale Products */}
+
         <div className="relative">
-          {/* Prev Button */}
           {startIndex > 0 && (
             <button
               onClick={() => handlePageChange("prev")}
@@ -133,11 +144,10 @@ function MainContent() {
             </button>
           )}
 
-          {/* Product Grid */}
           <div className="grid grid-cols-4 gap-6" style={{ margin: "0 48px" }}>
             {currentProducts.map((product) => (
               <div
-                key={product.id}
+                key={product._id}
                 ref={(el) => (productRefs.current[product._id] = el)}
                 className="flex flex-col p-3 transition-shadow duration-300 bg-white rounded-lg shadow-lg hover:shadow-xl"
               >
@@ -146,7 +156,7 @@ function MainContent() {
                   onClick={() => handleDetailProduct(product._id)}
                 >
                   <img
-                    src={product.images[0]}
+                    src={product.images?.[0] || "/placeholder.jpg"}
                     alt={product.name}
                     className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
                   />
@@ -166,7 +176,6 @@ function MainContent() {
                   )}
                 </div>
                 <button
-                  // onClick={() => handleDetailProduct(product._id)}
                   onClick={() => addToCart(product)}
                   className="flex items-center justify-center gap-2 py-3 mt-5 mb-3 text-sm font-medium text-white transition-colors duration-300 bg-orange-400 rounded-lg hover:bg-orange-500"
                 >
@@ -177,7 +186,6 @@ function MainContent() {
             ))}
           </div>
 
-          {/* Next Button */}
           {endIndex < filteredProducts.length && (
             <button
               onClick={() => handlePageChange("next")}

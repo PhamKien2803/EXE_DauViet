@@ -9,8 +9,9 @@ function OrderListPage() {
   const navigate = useNavigate();
 
   const token = localStorage.getItem("accessToken");
+  console.log("Token:", token);
 
-  // Lấy user an toàn từ localStorage
+
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (!storedUser || !token) {
@@ -32,9 +33,11 @@ function OrderListPage() {
 
     const fetchOrders = async () => {
       try {
-        const res = await fetch(`http://localhost:9999/api/order/user/${user._id}`, {
+        // https://azure-dau-viet-function-bucwa3f7b2fjbnbh.eastus-01.azurewebsites.net/
+        const res = await fetch(`https://azure-dau-viet-function-bucwa3f7b2fjbnbh.eastus-01.azurewebsites.net/api/order/user/${user._id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+
         if (!res.ok) throw new Error("Không thể tải đơn hàng");
 
         const data = await res.json();

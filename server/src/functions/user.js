@@ -1,22 +1,24 @@
-import { app } from '@azure/functions';
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
-import { redisClient } from '../config/redisClient.js';
-import User from '../models/userModels.js';
+const { app } = require('@azure/functions');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const User = require('../models/userModels.js');
+const connectDB = require('../shared/mongoose');
 
 const ACCESS_SECRET = process.env.ACCESS_TOKEN_SECRET || 'exe_201';
 const REFRESH_SECRET = process.env.REFRESH_TOKEN_SECRET || 'exe_201';
 
-async function verifyToken(request) {
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) return null;
+async function verifyToken(req) {
+    const authHeader = req.headers.get('authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return { status: 401, jsonBody: { message: 'Missing or invalid Authorization header' } };
+    }
 
     const token = authHeader.split(' ')[1];
     try {
         const decoded = jwt.verify(token, ACCESS_SECRET);
-        return decoded;
+        return { user: decoded };
     } catch (err) {
-        return null;
+        return { status: 401, jsonBody: { message: 'Invalid or expired token' } };
     }
 }
 
@@ -24,10 +26,10 @@ app.http('loginAccount', {
     methods: ['POST'],
     authLevel: 'anonymous',
     route: 'auth/login',
-    handler: async (request, context) => {
+    handler: async (req, context) => {
         try {
-            const body = await request.json();
-            const { username, password } = body;
+            await connectDB();
+            const { username, password } = await req.json();
 
             if (!username || !password) {
                 return { status: 400, jsonBody: { message: 'Please enter username and password' } };
@@ -38,106 +40,114 @@ app.http('loginAccount', {
                 return { status: 404, jsonBody: { message: 'Account not registered!' } };
             }
 
-            const checkPassword = await bcrypt.compare(password, user.password);
-            if (!checkPassword) {
+            const match = await bcrypt.compare(password, user.password);
+            if (!match) {
                 return { status: 401, jsonBody: { message: 'Username or password is incorrect!' } };
             }
 
             const accessToken = jwt.sign({ id: user._id }, ACCESS_SECRET, { expiresIn: '1d' });
             const refreshToken = jwt.sign({ id: user._id }, REFRESH_SECRET, { expiresIn: '7d' });
 
-            await redisClient.set(user._id.toString(), refreshToken, { EX: 7 * 24 * 60 * 60 });
-
             return {
                 status: 200,
                 jsonBody: {
                     message: 'Login successful',
                     accessToken,
-                    refreshToken
-                }
+                    refreshToken,
+                },
             };
         } catch (err) {
             context.log('Login error:', err);
             return { status: 500, jsonBody: { message: 'Server error' } };
         }
-    }
+    },
 });
 
 app.http('registerAccount', {
     methods: ['POST'],
     authLevel: 'anonymous',
     route: 'auth/register',
-    handler: async (request, context) => {
+    handler: async (req, context) => {
         try {
-            const body = await request.json();
-            const { username, email, password, role } = body;
+            await connectDB();
+            const { username, email, password, role } = await req.json();
 
             if (!username || !email || !password) {
                 return { status: 400, jsonBody: { message: 'Missing required fields' } };
             }
 
-            const existingUser = await User.findOne({
+            const exists = await User.findOne({
                 $or: [{ username }, { email }],
-                active: true
+                active: true,
             });
 
-            if (existingUser) {
+            if (exists) {
                 return { status: 400, jsonBody: { message: 'Username or email already exists' } };
             }
 
-            const newAccount = new User({ username, email, password, role });
-            await newAccount.save();
+            const newUser = new User({ username, email, password, role });
+            await newUser.save();
 
             return {
                 status: 201,
-                jsonBody: { message: 'Account created successfully', account: newAccount }
+                jsonBody: {
+                    message: 'Account created successfully',
+                    account: {
+                        id: newUser._id,
+                        username: newUser.username,
+                        email: newUser.email,
+                        role: newUser.role,
+                    },
+                },
             };
         } catch (err) {
             context.log('Register error:', err);
             return { status: 500, jsonBody: { message: 'Server error', error: err.message } };
         }
-    }
+    },
 });
 
 app.http('logoutAccount', {
     methods: ['POST'],
     authLevel: 'anonymous',
     route: 'auth/logout',
-    handler: async (request, context) => {
+    handler: async (req, context) => {
         try {
-            const user = await verifyToken(request);
-            if (!user) return { status: 401, jsonBody: { message: 'Unauthorized' } };
-
-            await redisClient.del(user.id.toString());
+            await connectDB();
+            const auth = await verifyToken(req);
+            if (auth.status) return auth;
             return { status: 200, jsonBody: { message: 'Logout successful' } };
         } catch (err) {
             context.log('Logout error:', err);
             return { status: 500, jsonBody: { message: 'Server error' } };
         }
-    }
+    },
 });
 
 app.http('getInformationAccount', {
     methods: ['GET'],
     authLevel: 'anonymous',
     route: 'auth/me',
-    handler: async (request, context) => {
+    handler: async (req, context) => {
         try {
-            const user = await verifyToken(request);
-            if (!user) return { status: 401, jsonBody: { message: 'Unauthorized' } };
+            await connectDB();
+            const auth = await verifyToken(req);
+            if (auth.status) return auth;
 
-            const account = await User.findById(user.id);
-            if (!account) {
+            const userId = auth.user.id;
+            const user = await User.findById(userId).select('-password');
+            if (!user) {
                 return { status: 404, jsonBody: { message: 'Account not found' } };
             }
 
             return {
                 status: 200,
-                jsonBody: account
+                jsonBody: user,
             };
         } catch (err) {
             context.log('Get info error:', err);
             return { status: 500, jsonBody: { message: 'Server error' } };
         }
-    }
+    },
 });
+

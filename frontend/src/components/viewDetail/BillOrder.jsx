@@ -30,7 +30,9 @@ function BillOrder() {
       if (!user?._id) return;
 
       try {
-        const res = await fetch(`http://localhost:9999/api/order/user/${user._id}`, {
+        // http://localhost:7071/api/
+        // https://azure-dau-viet-function-bucwa3f7b2fjbnbh.eastus-01.azurewebsites.net/
+        const res = await fetch(`https://azure-dau-viet-function-bucwa3f7b2fjbnbh.eastus-01.azurewebsites.net/api/order/user/${user._id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -64,7 +66,7 @@ function BillOrder() {
       <p className="text-center mb-4 text-gray-600">
         Mã đơn hàng: <strong>#{latestOrder._id.slice(-6)}</strong>
       </p>
-            <p className="text-center mb-4 text-gray-600">
+      <p className="text-center mb-4 text-gray-600">
         Bạn có thể liên hệ qua Zalo: <strong>0987654321</strong> để theo dõi đơn hàng của mình.
       </p>
 

@@ -1,22 +1,28 @@
 const jwt = require("jsonwebtoken");
 const ACCESS_SECRET = process.env.ACCESS_TOKEN_SECRET || "exe_201";
 
-const verifyToken = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-
+const verifyToken = async (req) => {
+  const authHeader = req.headers?.get('authorization');
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "Không tìm thấy tài khoản" });
+    return {
+      status: 401,
+      jsonBody: { message: "Không tìm thấy tài khoản" },
+    };
   }
 
   const token = authHeader.split(" ")[1];
 
   try {
     const decoded = jwt.verify(token, ACCESS_SECRET);
-    req.user = decoded; 
-    next();
+    req.user = decoded;
+    return null;
   } catch (err) {
-    return res.status(403).json({ message: "Đăng nhập để thử lại" });
+    return {
+      status: 403,
+      jsonBody: { message: "Đăng nhập để thử lại" },
+    };
   }
 };
 
 module.exports = verifyToken;
+

@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-// import { FaFacebookF, FaGooglePlusG, FaInstagram } from "react-icons/fa";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import { GoogleLogin } from "@react-oauth/google";
@@ -16,7 +15,7 @@ function SignInForm() {
       const { credential } = credentialResponse;
 
       const response = await fetch(
-        "http://localhost:9999/api/auth/google-login",
+        "https://azure-dau-viet-function-bucwa3f7b2fjbnbh.eastus-01.azurewebsites.net/api/auth/google-login",
         {
           method: "POST",
           headers: {
@@ -32,7 +31,7 @@ function SignInForm() {
         const { accessToken } = data;
         localStorage.setItem("accessToken", accessToken);
 
-        const responseMe = await fetch("http://localhost:9999/api/auth/me", {
+        const responseMe = await fetch("http://localhost:7071/api/auth/me", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -73,7 +72,7 @@ function SignInForm() {
     const { email, password } = state;
 
     try {
-      const response = await fetch("http://localhost:9999/api/auth/login", {
+      const response = await fetch("http://localhost:7071/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -86,7 +85,7 @@ function SignInForm() {
       if (response.ok) {
         const { accessToken } = data;
         localStorage.setItem("accessToken", accessToken);
-        const responseMe = await fetch("http://localhost:9999/api/auth/me", {
+        const responseMe = await fetch("http://localhost:7071/api/auth/me", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

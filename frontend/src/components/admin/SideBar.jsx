@@ -1,10 +1,10 @@
-import React from "react";
+
 import { NavLink } from "react-router-dom";
 
 const menu = [
   { to: "/admin/dashboard", label: "Dashboard" },
-//   { to: "/admin/products", label: "Quản lý sản phẩm" },
-//   { to: "/admin/quizzes", label: "Quản lý quiz" },
+  //   { to: "/admin/products", label: "Quản lý sản phẩm" },
+  //   { to: "/admin/quizzes", label: "Quản lý quiz" },
   { to: "/admin/orders", label: "Quản lý đơn hàng" },
   { to: "/", label: "Đăng xuất" },
 ];
@@ -18,8 +18,7 @@ const SideBar = () => (
           key={item.to}
           to={item.to}
           className={({ isActive }) =>
-            `px-6 py-3 hover:bg-orange-500 rounded transition ${
-              isActive ? "bg-orange-500 font-semibold" : ""
+            `px-6 py-3 hover:bg-orange-500 rounded transition ${isActive ? "bg-orange-500 font-semibold" : ""
             }`
           }
         >

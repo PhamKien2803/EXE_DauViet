@@ -10,13 +10,14 @@ function Quiz() {
   const [showResults, setShowResults] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:9999/api/quiz")
+    // fetch("http://localhost:9999/api/quiz")
+    fetch("https://azure-dau-viet-function-bucwa3f7b2fjbnbh.eastus-01.azurewebsites.net/api/quiz")
       .then((res) => res.json())
       .then((resData) => {
         const formatted = resData.data.map((item) => ({
           question: item.question,
           options: item.options,
-          correctAnswer: item.correctAnswer - 1, // chuyển sang index 0
+          correctAnswer: item.correctAnswer - 1,
           imageURL: item.imageURL,
         }));
         setQuestions(formatted);
@@ -95,24 +96,23 @@ function Quiz() {
               {q.options.map((opt, optIdx) => (
                 <div
                   key={optIdx}
-                  className={`flex items-center p-3 border rounded-lg mb-2 ${
-                    selected[idx + 1] === optIdx &&
+                  className={`flex items-center p-3 border rounded-lg mb-2 ${selected[idx + 1] === optIdx &&
                     selected[idx + 1] !== q.correctAnswer
-                      ? "border-red-500 bg-red-50 text-red-700"
-                      : selected[idx + 1] === optIdx &&
-                        selected[idx + 1] === q.correctAnswer
+                    ? "border-red-500 bg-red-50 text-red-700"
+                    : selected[idx + 1] === optIdx &&
+                      selected[idx + 1] === q.correctAnswer
                       ? "border-green-500 bg-green-50 text-green-700"
                       : "border-gray-300 bg-white"
-                  }`}
+                    }`}
                 >
                   <span className="mr-3">
                     {selected[idx + 1] === optIdx &&
-                    selected[idx + 1] !== q.correctAnswer
+                      selected[idx + 1] !== q.correctAnswer
                       ? "❌"
                       : selected[idx + 1] === optIdx &&
                         selected[idx + 1] === q.correctAnswer
-                      ? "✅"
-                      : ""}
+                        ? "✅"
+                        : ""}
                   </span>
                   <span className="flex-1">{opt}</span>
                   {q.correctAnswer === optIdx &&
@@ -186,13 +186,12 @@ function Quiz() {
             {questions.map((_, idx) => (
               <span
                 key={idx}
-                className={`w-7 h-7 flex items-center justify-center rounded-full border-2 text-sm font-bold ${
-                  idx + 1 === current
-                    ? "bg-orange-500 text-white border-orange-500"
-                    : selected[idx + 1] !== undefined
+                className={`w-7 h-7 flex items-center justify-center rounded-full border-2 text-sm font-bold ${idx + 1 === current
+                  ? "bg-orange-500 text-white border-orange-500"
+                  : selected[idx + 1] !== undefined
                     ? "bg-green-500 text-white border-green-500"
                     : "bg-gray-100 text-gray-500 border-gray-300"
-                }`}
+                  }`}
               >
                 {idx + 1}
               </span>
@@ -217,11 +216,10 @@ function Quiz() {
             {currentQuestion.options.map((opt, idx) => (
               <label
                 key={idx}
-                className={`flex items-center p-3 border rounded-lg cursor-pointer transition-colors ${
-                  selected[current] === idx
-                    ? "border-orange-500 bg-orange-50"
-                    : "border-gray-300 bg-white hover:bg-gray-50"
-                }`}
+                className={`flex items-center p-3 border rounded-lg cursor-pointer transition-colors ${selected[current] === idx
+                  ? "border-orange-500 bg-orange-50"
+                  : "border-gray-300 bg-white hover:bg-gray-50"
+                  }`}
               >
                 <input
                   type="radio"

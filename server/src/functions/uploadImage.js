@@ -1,8 +1,10 @@
-import { app } from '@azure/functions';
-import cloudinary from 'cloudinary';
-import formidable from 'formidable';
+const { app } = require('@azure/functions');
+const cloudinary = require('cloudinary').v2;
+const formidable = require('formidable');
+const connectDB = require('../shared/mongoose');
 
-cloudinary.v2.config({
+
+cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET
@@ -44,6 +46,7 @@ app.http('uploadImages', {
     route: 'upload/images',
     handler: async (request, context) => {
         try {
+            await connectDB();
             const { files } = await parseFormData(request);
             const fileList = Array.isArray(files.images) ? files.images : [files.images];
 

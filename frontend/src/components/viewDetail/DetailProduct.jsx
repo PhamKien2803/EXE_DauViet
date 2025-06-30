@@ -6,7 +6,7 @@ import { useCart } from "../../context/CartContext";
 
 function DetailProduct() {
   const navigate = useNavigate();
-  const { id } = useParams(); // Lấy id từ URL
+  const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const { addToCart } = useCart();
@@ -15,16 +15,14 @@ function DetailProduct() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        // Cập nhật API endpoint để lấy chi tiết sản phẩm
-        const response = await fetch(`http://localhost:9999/api/product/${id}`);
+        // https://azure-dau-viet-function-bucwa3f7b2fjbnbh.eastus-01.azurewebsites.net/
+        const response = await fetch(`https://azure-dau-viet-function-bucwa3f7b2fjbnbh.eastus-01.azurewebsites.net/api/product/${id}`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        // Xử lý trường hợp API trả về dữ liệu trong thuộc tính 'data'
-        setProduct(data.data || data);
+        setProduct(data.product);
       } catch (error) {
-        // Xử lý lỗi, ví dụ: điều hướng đến trang 404
       } finally {
         setLoading(false);
       }
@@ -34,6 +32,11 @@ function DetailProduct() {
       fetchProduct();
     }
   }, [id]);
+
+  const formatCurrency = (number) => {
+    return new Intl.NumberFormat('vi-VN').format(number) + ' VND';
+  };
+
 
   if (loading) {
     return (
@@ -93,8 +96,10 @@ function DetailProduct() {
               <span className="ml-2">{product.size || "N/A"}</span>
             </div>
             <div className="mb-4 text-2xl font-bold">
-              {product.price.toLocaleString()} VND
+              {product.price != null ? formatCurrency(product.price) : "Đang cập nhật giá"}
             </div>
+
+
             <p className="mb-4">{product.description}</p>
 
             <div className="flex flex-col gap-3 pt-4 mt-auto sm:flex-row sm:items-center">

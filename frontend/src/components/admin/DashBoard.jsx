@@ -1,4 +1,4 @@
-import React from "react";
+
 import { GiPagoda, GiCastle, GiImperialCrown } from "react-icons/gi";
 
 const stats = [

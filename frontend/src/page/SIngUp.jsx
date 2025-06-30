@@ -24,7 +24,8 @@ function SignUpForm() {
 
     // Gọi API đăng ký
     try {
-      const response = await fetch("http://localhost:9999/api/auth/register", {
+      // https://azure-dau-viet-function-bucwa3f7b2fjbnbh.eastus-01.azurewebsites.net/
+      const response = await fetch("https://azure-dau-viet-function-bucwa3f7b2fjbnbh.eastus-01.azurewebsites.net/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

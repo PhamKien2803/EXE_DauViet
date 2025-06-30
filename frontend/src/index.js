@@ -4,10 +4,10 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const clientId = process.env.GG_CLIENT_ID;
-
+// axios.defaults.baseURL = "http://localhost:9999/api/";
+// axios.defaults.baseURL = "http://localhost:7071/api/";
 root.render(
   <React.StrictMode>
     <GoogleOAuthProvider clientId={clientId}>

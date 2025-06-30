@@ -4,9 +4,9 @@ const orderSchema = new mongoose.Schema({
     user: { type: mongoose.Types.ObjectId, ref: "User", required: true },
     products: [{
         product: { type: mongoose.Types.ObjectId, ref: "Product", required: true },
-        quantity: { type: Number, default: 1 } 
+        quantity: { type: Number, default: 1 }
     }],
-    vouchers: { type: String }, 
+    vouchers: [{ type: String }],
     state: {
         type: String,
         enum: ["Chưa thanh toán", "Đã thanh toán", "Hủy đơn hàng"],
@@ -16,7 +16,7 @@ const orderSchema = new mongoose.Schema({
     address: { type: String, required: true },
     phone: { type: String, required: true },
     note: { type: String }
-}, { timestamps: true }); 
+}, { timestamps: true });
 
 orderSchema.pre("save", async function (next) {
     try {
@@ -31,9 +31,9 @@ orderSchema.pre("save", async function (next) {
             total += productData.price * (item.quantity || 1);
         }
         order.totalPrice = total;
-        next(); 
+        next();
     } catch (err) {
-        next(err); 
+        next(err);
     }
 });
 

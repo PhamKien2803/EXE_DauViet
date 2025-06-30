@@ -77,6 +77,44 @@ function Checkout() {
     ), { duration: 8000 });
   };
 
+  // const submitOrder = async () => {
+  //   const orderData = {
+  //     user: user?._id || null,
+  //     products: selectedItems.map(item => ({
+  //       product: item._id,
+  //       quantity: item.quantity
+  //     })),
+  //     vouchers: voucher,
+  //     state: "Chưa thanh toán",
+  //     address: formData.address.trim(),
+  //     phone: formData.phone.trim(),
+  //     note: formData.note.trim()
+  //   };
+
+  //   try {
+  //     const res = await fetch("http://localhost:7071/api/order/", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+  //       },
+  //       body: JSON.stringify(orderData)
+  //     });
+
+  //     const data = await res.json();
+  //     if (res.ok) {
+  //       toast.success("Đặt hàng thành công!");
+  //       clearCart(); // ← THÊM DÒNG NÀY
+  //       navigate("/billOrder");
+  //     } else {
+  //       toast.error("Lỗi khi đặt hàng: " + data.message);
+  //     }
+  //   } catch (err) {
+  //     console.error("Lỗi gửi đơn hàng:", err);
+  //     toast.error("Lỗi mạng hoặc server không phản hồi.");
+  //   }
+  // };
+
   const submitOrder = async () => {
     const orderData = {
       user: user?._id || null,
@@ -92,7 +130,8 @@ function Checkout() {
     };
 
     try {
-      const res = await fetch("http://localhost:9999/api/order/", {
+      // https://azure-dau-viet-function-bucwa3f7b2fjbnbh.eastus-01.azurewebsites.net/
+      const res = await fetch("https://azure-dau-viet-function-bucwa3f7b2fjbnbh.eastus-01.azurewebsites.net/api/order", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -101,19 +140,30 @@ function Checkout() {
         body: JSON.stringify(orderData)
       });
 
-      const data = await res.json();
+      // Nếu không có nội dung trong response
+      if (res.status === 204) {
+        toast.success("Đặt hàng thành công!");
+        clearCart();
+        navigate("/billOrder");
+        return;
+      }
+
+      const text = await res.text(); // Đọc raw text
+      const data = text ? JSON.parse(text) : {}; // Chỉ parse nếu có nội dung
+
       if (res.ok) {
         toast.success("Đặt hàng thành công!");
-        clearCart(); // ← THÊM DÒNG NÀY
+        clearCart();
         navigate("/billOrder");
       } else {
-        toast.error("Lỗi khi đặt hàng: " + data.message);
+        toast.error("Lỗi khi đặt hàng: " + (data.message || "Không rõ lỗi"));
       }
     } catch (err) {
       console.error("Lỗi gửi đơn hàng:", err);
       toast.error("Lỗi mạng hoặc server không phản hồi.");
     }
   };
+
 
   return (
     <div className="min-h-screen py-8 bg-white">

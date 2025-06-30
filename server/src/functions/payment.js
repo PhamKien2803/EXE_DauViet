@@ -1,6 +1,7 @@
-import { app } from '@azure/functions';
-import qs from 'qs';
-import crypto from 'crypto';
+const { app } = require('@azure/functions');
+const qs = require('qs');
+const crypto = require('crypto');
+const connectDB = require('../shared/mongoose');
 
 function sortObject(obj) {
     const sorted = {};
@@ -16,6 +17,7 @@ app.http('createVNPayUrl', {
     authLevel: 'anonymous',
     route: 'vnpay/create',
     handler: async (request, context) => {
+        await connectDB();
         const tmnCode = process.env.VNP_TMNCODE;
         const secretKey = process.env.VNP_HASHSECRET;
         const vnpUrl = process.env.VNP_URL;
@@ -74,6 +76,7 @@ app.http('handleVNPayReturn', {
     authLevel: 'anonymous',
     route: 'vnpay/return',
     handler: async (request, context) => {
+        await connectDB();
         const queryParams = request.query;
         const vnp_Params = { ...queryParams };
         const secureHash = vnp_Params['vnp_SecureHash'];
