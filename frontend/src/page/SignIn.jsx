@@ -72,7 +72,8 @@ function SignInForm() {
     const { email, password } = state;
 
     try {
-      const response = await fetch("http://localhost:7071/api/auth/login", {
+      // https://azure-dau-viet-function-bucwa3f7b2fjbnbh.eastus-01.azurewebsites.net/
+      const response = await fetch("https://azure-dau-viet-function-bucwa3f7b2fjbnbh.eastus-01.azurewebsites.net/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
