@@ -73,26 +73,32 @@ function SignInForm() {
 
     try {
       // https://azure-dau-viet-function-bucwa3f7b2fjbnbh.eastus-01.azurewebsites.net/
-      const response = await fetch("https://azure-dau-viet-function-bucwa3f7b2fjbnbh.eastus-01.azurewebsites.net/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username: email, password }),
-      });
+      const response = await fetch(
+        "https://azure-dau-viet-function-bucwa3f7b2fjbnbh.eastus-01.azurewebsites.net/api/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username: email, password }),
+        }
+      );
 
       const data = await response.json();
 
       if (response.ok) {
         const { accessToken } = data;
         localStorage.setItem("accessToken", accessToken);
-        const responseMe = await fetch("https://azure-dau-viet-function-bucwa3f7b2fjbnbh.eastus-01.azurewebsites.net/api/auth/me", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        const responseMe = await fetch(
+          "https://azure-dau-viet-function-bucwa3f7b2fjbnbh.eastus-01.azurewebsites.net/api/auth/me",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
 
         const userInfo = await responseMe.json();
         login(userInfo);
@@ -128,7 +134,7 @@ function SignInForm() {
   return (
     <div className="form-container sign-in-container">
       <form onSubmit={handleOnSubmit}>
-        <h1 style={{ fontSize: 32, paddingBottom: 20 }}>Sign in</h1>
+        <h1 style={{ fontSize: 32, paddingBottom: 20 }}>Đăng Nhập</h1>
         {/* <div className="social-container">
           <a href="#" className="social">
             <FaFacebookF />
@@ -143,7 +149,7 @@ function SignInForm() {
         {/* <span>or use your account</span> */}
         <input
           type="text"
-          placeholder="Username"
+          placeholder="Nhập tên"
           name="email"
           value={state.email}
           onChange={handleChange}
@@ -151,7 +157,7 @@ function SignInForm() {
         <input
           type="password"
           name="password"
-          placeholder="Password"
+          placeholder="Nhập mật khẩu"
           value={state.password}
           onChange={handleChange}
         />
@@ -161,7 +167,7 @@ function SignInForm() {
         <GoogleLogin onSuccess={handleSuccess} onError={handleError} />
 
         <button type="submit" style={buttonStyle}>
-          Sign In
+          Đăng Nhập
         </button>
 
         {errorMessage && (
