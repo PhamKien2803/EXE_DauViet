@@ -162,7 +162,7 @@ function SignInForm() {
           onChange={handleChange}
         />
         <Link to="/forgot-password" className="text-blue-500 hover:underline">
-          Forgot your password?
+          Quên mật khẩu?
         </Link>
         <GoogleLogin onSuccess={handleSuccess} onError={handleError} />
 
