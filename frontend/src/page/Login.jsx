@@ -53,9 +53,10 @@ export default function Login() {
         <div className="overlay-container">
           <div className="overlay">
             <div className="overlay-panel overlay-left">
-              <h1 style={{ fontSize: 32 }}>Welcome Back!</h1>
+              <h1 style={{ fontSize: 32 }}>Chào mừng bạn trở lại!</h1>
               <p>
-                To keep connected with us please login with your personal info
+                Để giữ liên lạc với chúng tôi, vui lòng đăng nhập bằng thông tin
+                cá nhân của bạn
               </p>
               <button
                 style={ghostButtonStyle}
@@ -63,19 +64,22 @@ export default function Login() {
                 id="signIn"
                 onClick={() => handleOnClick("signIn")}
               >
-                Sign In
+                ĐĂng nhập
               </button>
             </div>
             <div className="overlay-panel overlay-right">
-              <h1 style={{ fontSize: 32 }}>Hello, Friend!</h1>
-              <p>Enter your personal details and start journey with us</p>
+              <h1 style={{ fontSize: 32 }}>Chào, Bạn!</h1>
+              <p>
+                Nhập thông tin cá nhân của bạn và bắt đầu hành trình cùng chúng
+                tôi
+              </p>
               <button
                 style={ghostButtonStyle}
                 className="ghost "
                 id="signUp"
                 onClick={() => handleOnClick("signUp")}
               >
-                Sign Up
+                Đăng ký tài khoản
               </button>
             </div>
           </div>
